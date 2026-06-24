@@ -2,27 +2,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 
 const nextConfig = {
-  // 生产环境始终使用 standalone 模式（Vercel/Docker/Zeabur）
-  // 本地开发时（NODE_ENV !== 'production'）不使用 standalone
-  ...(process.env.NODE_ENV === 'production' ? { output: 'standalone' } : {}),
-
   reactStrictMode: false,
 
-  // Puppeteer/Chromium 相关包不进行 bundle（用于 Vercel serverless）
+  // Puppeteer/Chromium 相关包不进行 bundle（Vercel serverless 需要）
   serverExternalPackages: ['@sparticuz/chromium', 'puppeteer-core'],
 
-  // Next.js 16 使用 Turbopack，配置 SVG 加载
-  turbopack: {
-    root: __dirname,
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    },
-  },
+  // 👇 移除了 turbopack 配置（@svgr/webpack 在 Turbopack 下兼容性差）
+  // 👇 移除了 output: 'standalone'（Vercel 不需要，反而可能出问题）
 
-  // Uncoment to add domain whitelist
   images: {
     unoptimized: true,
     remotePatterns: [
